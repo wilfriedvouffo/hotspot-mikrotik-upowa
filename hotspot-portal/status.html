@@ -1,0 +1,116 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="-1">
+<title>Internet hotspot - Status</title>
+<script>
+    function openLogout() {
+	if (window.name != 'hotspot_status') return true;
+        open('$(link-logout)', 'hotspot_logout', 'toolbar=0,location=0,directories=0,status=0,menubars=0,resizable=1,width=280,height=250');
+	window.close();
+	return false;
+    }
+    var i18n = {
+      fr: {greet:"Bonjour", ip:"Adresse IP", mac:"Adresse MAC", in:"Données reçues", out:"Données envoyées",
+           since:"Connecté depuis", left:"Date d'expiration", logout:"Se déconnecter", contact:"Contact"},
+      en: {greet:"Hello", ip:"IP address", mac:"MAC address", in:"Data received", out:"Data sent",
+           since:"Connected since", left:"Expiry date", logout:"Log out", contact:"Contact"}
+    };
+    function setLang(l){
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        el.textContent = i18n[l][el.getAttribute('data-i18n')];
+      });
+    }
+    function parseDuration(str){
+      var d=0,h=0,m=0,s=0;
+      var md=str.match(/(\d+)d/); if(md) d=parseInt(md[1]);
+      var mh=str.match(/(\d+)h/); if(mh) h=parseInt(mh[1]);
+      var mm=str.match(/(\d+)m(?!s)/); if(mm) m=parseInt(mm[1]);
+      var ms=str.match(/(\d+)s/); if(ms) s=parseInt(ms[1]);
+      return ((d*24+h)*60+m)*60+s;
+    }
+    function showExpiry(){
+      var el = document.getElementById('expiry-value');
+      if(!el) return;
+      var raw = el.getAttribute('data-raw');
+      if(!raw) { el.textContent = '—'; return; }
+      var secs = parseDuration(raw);
+      var expiry = new Date(Date.now() + secs*1000);
+      var opts = { day:'2-digit', month:'2-digit', year:'numeric' };
+      el.textContent = expiry.toLocaleDateString('fr-FR', opts);
+    }
+    window.onload = function(){ setLang('fr'); showExpiry(); };
+</script>
+<style>
+  :root{--navy:#0d1b3e;--navy-2:#152a5c;--orange:#ff6a1a;--orange-2:#ff8a3d;--green:#16a34a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 15% 10%, var(--navy-2), var(--navy) 60%);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .card{width:100%;max-width:440px;background:#fff;border-radius:20px;overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);}
+  .top{background:linear-gradient(135deg, var(--navy), var(--navy-2));padding:28px 28px 20px;color:#fff;
+    display:flex;justify-content:space-between;align-items:flex-start;}
+  .status-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green);
+    margin-right:8px;box-shadow:0 0 0 4px rgba(22,163,74,0.25);}
+  .top .tag{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.65);}
+  .top h1{font-size:22px;font-weight:700;margin-top:8px;}
+  select{background:#fff;color:var(--navy);border:1px solid #d6dae3;
+    border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;}
+  .body{padding:26px 28px 28px;}
+  .stat{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #eef0f4;}
+  .stat:last-of-type{border-bottom:none;}
+  .stat .label{font-size:12.5px;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;}
+  .stat .value{font-size:14.5px;font-weight:600;color:var(--navy);text-align:right;}
+  .btn{width:100%;margin-top:14px;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;
+    cursor:pointer;display:block;text-align:center;text-decoration:none;color:#fff;}
+  .btn-logout{background:linear-gradient(135deg, var(--orange), var(--orange-2));
+    box-shadow:0 12px 24px -10px rgba(255,106,26,0.55);}
+  .btn-contact{background:linear-gradient(135deg, var(--navy), var(--navy-2));}
+
+  @media (max-width: 480px){
+    body{padding:16px;}
+    .card{max-width:100%;border-radius:16px;}
+    .top{padding:20px 18px 16px;flex-wrap:wrap;gap:10px;}
+    .top h1{font-size:19px;}
+    .body{padding:18px;}
+    .stat{flex-wrap:wrap;}
+    .stat .value{text-align:left;}
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="top">
+    <div>
+      <span class="tag"><span class="status-dot"></span><span data-i18n="greet">Bonjour</span></span>
+      <h1>$(username)</h1>
+    </div>
+    <select onchange="setLang(this.value)">
+      <option value="fr">FR</option>
+      <option value="en">EN</option>
+    </select>
+  </div>
+
+  <div class="body">
+    <div class="stat"><span class="label" data-i18n="ip">Adresse IP</span><span class="value">$(ip)</span></div>
+    <div class="stat"><span class="label" data-i18n="mac">Adresse MAC</span><span class="value">$(mac)</span></div>
+    <div class="stat"><span class="label" data-i18n="in">Données reçues</span><span class="value">$(bytes-in-nice)</span></div>
+    <div class="stat"><span class="label" data-i18n="out">Données envoyées</span><span class="value">$(bytes-out-nice)</span></div>
+    <div class="stat"><span class="label" data-i18n="since">Connecté depuis</span><span class="value">$(uptime)</span></div>
+    $(if session-time-left)
+    <div class="stat"><span class="label" data-i18n="left">Date d'expiration</span><span class="value" id="expiry-value" data-raw="$(session-time-left)">—</span></div>
+    $(endif)
+
+    <form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+      <button type="submit" class="btn btn-logout" data-i18n="logout">Se déconnecter</button>
+    </form>
+    <a class="btn btn-contact" href="https://upowa.energy" target="_blank" data-i18n="contact">Contact</a>
+  </div>
+</div>
+
+</body>
+</html>

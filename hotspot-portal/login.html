@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion au réseau</title>
+$(if chap-id)
+<form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+  <input type="hidden" name="username" />
+  <input type="hidden" name="password" />
+  <input type="hidden" name="dst" value="$(link-orig)" />
+  <input type="hidden" name="popup" value="true" />
+</form>
+<script src="/md5.js"></script>
+<script>
+function doLogin() {
+  document.sendin.username.value = document.login.username.value;
+  document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+  document.sendin.submit();
+  return false;
+}
+</script>
+$(endif)
+<script>
+    var i18n = {
+      fr: {title:"Bienvenue sur le réseau", subtitle:"Connectez-vous pour accéder à Internet",
+           user:"Identifiant", pass:"Mot de passe", btn:"Se connecter", footer:"Réseau protégé"},
+      en: {title:"Welcome to the network", subtitle:"Sign in to access the Internet",
+           user:"Username", pass:"Password", btn:"Connect", footer:"Protected network"}
+    };
+    function setLang(l){
+      document.querySelectorAll('[data-i18n]').forEach(function(el){
+        el.textContent = i18n[l][el.getAttribute('data-i18n')];
+      });
+      document.querySelector('input[name="username"]').placeholder = l === 'fr' ? 'ex: etudiant' : 'e.g: student';
+    }
+    window.onload = function(){ setLang('fr'); };
+</script>
+<style>
+  :root{
+    --navy:#0d1b3e;
+    --navy-2:#152a5c;
+    --orange:#ff6a1a;
+    --orange-2:#ff8a3d;
+    --paper:#f4f6fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 15% 10%, var(--navy-2), var(--navy) 60%);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    color:#1a1a1a;
+    position:relative;
+    overflow:hidden;
+  }
+  /* decorative hexagons */
+  .hex{
+    position:absolute;
+    width:220px;height:220px;
+    border:2px solid rgba(255,255,255,0.06);
+    clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%);
+  }
+  .hex.h1{top:-60px;left:-60px;width:300px;height:300px;}
+  .hex.h2{bottom:-80px;right:-40px;width:340px;height:340px;border-color:rgba(255,106,26,0.10);}
+  .hex.h3{top:20%;right:8%;width:120px;height:120px;border-color:rgba(255,255,255,0.05);}
+
+  .card{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:420px;
+    background:#ffffff;
+    border-radius:20px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    overflow:hidden;
+  }
+  .card-top{
+    background:linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 100%);
+    padding:36px 32px 28px;
+    text-align:center;
+    color:#fff;
+  }
+  .badge{
+    width:64px;height:64px;
+    margin:0 auto 16px;
+    border-radius:16px;
+    background:linear-gradient(135deg, var(--orange), var(--orange-2));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 10px 24px -8px rgba(255,106,26,0.6);
+  }
+  .badge svg{width:32px;height:32px;}
+  .card-top h1{
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:0.3px;
+  }
+  .card-top p{
+    margin-top:6px;
+    font-size:13px;
+    color:rgba(255,255,255,0.65);
+  }
+
+  .card-body{
+    padding:32px;
+  }
+  .field{
+    margin-bottom:16px;
+  }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#6b7280;
+    margin-bottom:6px;
+  }
+  .field .input-wrap{
+    position:relative;
+  }
+  .field input{
+    width:100%;
+    padding:13px 14px 13px 42px;
+    border:1.5px solid #e5e7eb;
+    border-radius:10px;
+    font-size:15px;
+    background:var(--paper);
+    transition:border-color .15s, box-shadow .15s;
+    outline:none;
+  }
+  .field input:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 3px rgba(255,106,26,0.15);
+    background:#fff;
+  }
+  .field .icon{
+    position:absolute;
+    left:14px;top:50%;
+    transform:translateY(-50%);
+    width:18px;height:18px;
+    color:#9aa3b2;
+  }
+
+  .btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg, var(--orange), var(--orange-2));
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    letter-spacing:0.02em;
+    box-shadow:0 12px 24px -10px rgba(255,106,26,0.55);
+    transition:transform .12s, box-shadow .12s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+
+  .error{
+    background:#fef2f2;
+    border:1px solid #fecaca;
+    color:#b91c1c;
+    font-size:13px;
+    padding:10px 12px;
+    border-radius:8px;
+    margin-bottom:16px;
+    display:none;
+  }
+  .error.show{display:block;}
+
+  .footer{
+    text-align:center;
+    margin-top:22px;
+    font-size:11.5px;
+    color:#9aa3b2;
+  }
+  .footer strong{color:#6b7280;}
+
+  @media (max-width: 480px){
+    body{padding:16px;}
+    .hex{display:none;}
+    .card{max-width:100%;border-radius:16px;}
+    .card-top{padding:28px 22px 22px;}
+    .card-body{padding:22px;}
+    .field input{font-size:16px;}
+    select[onchange]{top:10px;right:10px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="hex h1"></div>
+<div class="hex h2"></div>
+<div class="hex h3"></div>
+
+<select onchange="setLang(this.value)" style="position:fixed;top:16px;right:16px;z-index:3;background:#fff;color:var(--navy);border:1px solid #d6dae3;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;">
+  <option value="fr">FR</option>
+  <option value="en">EN</option>
+</select>
+
+<div class="card">
+  <div class="card-top">
+    <div class="badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+        <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <circle cx="12" cy="20" r="1" fill="#fff"></circle>
+      </svg>
+    </div>
+    <h1 data-i18n="title">Bienvenue sur le réseau</h1>
+    <p data-i18n="subtitle">Connectez-vous pour accéder à Internet</p>
+  </div>
+
+  <div class="card-body">
+    <div class="error $(if error)show$(endif)">$(error)</div>
+
+    <form name="login" action="$(link-login-only)" method="post" $(if chap-id)onSubmit="return doLogin()"$(endif)>
+      <input type="hidden" name="dst" value="$(link-orig)">
+      <input type="hidden" name="popup" value="true">
+
+      <div class="field">
+        <label for="username" data-i18n="user">Identifiant</label>
+        <div class="input-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <input type="text" name="username" placeholder="ex: etudiant" value="$(username)" autocapitalize="off" autocorrect="off">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password" data-i18n="pass">Mot de passe</label>
+        <div class="input-wrap">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <input type="password" name="password" placeholder="••••••••">
+        </div>
+      </div>
+
+      <button type="submit" class="btn" data-i18n="btn">Se connecter</button>
+    </form>
+
+    <div class="footer">
+      <span data-i18n="footer">Réseau protégé</span> &middot; <strong>Hotspot Wi-Fi</strong>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

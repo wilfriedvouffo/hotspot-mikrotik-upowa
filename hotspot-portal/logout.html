@@ -1,0 +1,44 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Internet hotspot - Logout</title>
+<style>
+  :root{--navy:#0d1b3e;--navy-2:#152a5c;--orange:#ff6a1a;--orange-2:#ff8a3d;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 15% 10%, var(--navy-2), var(--navy) 60%);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .card{width:100%;max-width:380px;background:#fff;border-radius:20px;padding:36px 28px;
+    text-align:center;box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);}
+  .icon{width:56px;height:56px;margin:0 auto 18px;border-radius:14px;
+    background:linear-gradient(135deg, var(--orange), var(--orange-2));
+    display:flex;align-items:center;justify-content:center;}
+  h1{font-size:19px;color:var(--navy);margin-bottom:6px;}
+  p{font-size:13.5px;color:#6b7280;margin-bottom:22px;}
+  .btn{display:inline-block;padding:13px 26px;border-radius:10px;
+    background:linear-gradient(135deg, var(--orange), var(--orange-2));
+    color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;
+    box-shadow:0 12px 24px -10px rgba(255,106,26,0.55);}
+
+  @media (max-width: 480px){
+    body{padding:16px;}
+    .card{max-width:100%;border-radius:16px;padding:28px 22px;}
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+      <polyline points="16 17 21 12 16 7"></polyline>
+      <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
+  </div>
+  <h1>Vous êtes déconnecté</h1>
+  <p>Merci d'avoir utilisé le hotspot Wi-Fi.</p>
+  <a class="btn" href="$(link-login)">Se reconnecter</a>
+</div>
+</body>
+</html>
